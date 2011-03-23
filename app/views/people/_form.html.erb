@@ -18,6 +18,7 @@
     <%= f.label :last_name %>     <%= f.text_field :last_name %>
   </div>
 <br />
+	<div id='references-list'>
     <%= f.fields_for :references do |ref_form| %>
         <% if ref_form.object.id %>
           <div class = "detail-display">This is what we display</div>
@@ -45,7 +46,8 @@
             <%= ref_form.link_to_stash "OK", :references %>
           </div>
         <% end %>
-    <% end %>
+	    <% end %>
+		</div>
     <br />
     <%= f.link_to_add "Request a reference", :references %>
     <br />

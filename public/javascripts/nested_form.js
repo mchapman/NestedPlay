@@ -63,7 +63,7 @@ $('form a.stash_nested_fields').live('click', function() {
   var inputs = edit_popup.find('input')
 //  if(inputs.length > 0) {
       // create a new view div
-      var new_view = $(this).before(createDivFromBlueprint(assoc,'view'));
+      var new_view = $('#references-list').append(createDivFromBlueprint(assoc,'view'));
       // put the data from the view window into the view div
       inputs.each(function(index) {
         var field_name = $(this).attr("name").match(/\[(\w+)\]$/)[1];
