@@ -1,0 +1,22 @@
+.detail-popup {
+	position: absolute;
+	z-index: 2;
+	top: 100px;
+	left: 180px;
+	width: 400px;
+	background: #f8f8f8;
+    padding: 5px;
+	-moz-box-shadow: 10px 10px 10px #888;
+	-webkit-box-shadow: 10px 10px 10px #888;
+	box-shadow: 10px 10px 10px #888;
+	border: 1px solid #ddd;
+}
+
+.detail-display {
+    border : 1px solid gray;
+    float: left;
+}
+
+.fields {
+    clear: both;
+}

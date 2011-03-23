@@ -1,0 +1,56 @@
+<%= nested_form_for @person do |f| %>
+  <% if @person.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@person.errors.count, "error") %> prohibited this country from being saved:</h2>
+
+      <ul>
+      <% @person.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :first_name %>    <%= f.text_field :first_name %>
+  </div>
+  <div class="field">
+    <%= f.label :last_name %>     <%= f.text_field :last_name %>
+  </div>
+<br />
+    <%= f.fields_for :references do |ref_form| %>
+        <% if ref_form.object.id %>
+          <div class = "detail-display">This is what we display</div>
+          <%= ref_form.hidden_field :first_name,  %>
+          <%= ref_form.hidden_field :last_name %>
+          <%= ref_form.hidden_field :email %>
+          <%= ref_form.hidden_field :date_requested %>
+          <%= ref_form.hidden_field :date_returned %>
+          <%= ref_form.hidden_field :comments %>
+          <%= ref_form.link_to_remove "Delete" %>
+        <% else %>
+          <div class="detail-popup">
+            <p>
+              <%= ref_form.label :first_name %>
+              <%= ref_form.text_field :first_name %>
+            </p>
+            <p>
+              <%= ref_form.label :last_name %>
+              <%= ref_form.text_field :last_name %>
+            </p>
+            <p>
+              <%= ref_form.label :email %>
+              <%= ref_form.text_field :email %>
+            </p>
+            <%= ref_form.link_to_stash "OK", :references %>
+          </div>
+        <% end %>
+    <% end %>
+    <br />
+    <%= f.link_to_add "Request a reference", :references %>
+    <br />
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
