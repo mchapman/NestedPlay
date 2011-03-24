@@ -59,19 +59,28 @@ $('form a.stash_nested_fields').live('click', function() {
   var assoc   = $(this).attr('data-association');     
   var edit_popup = $('#'+assoc+'-nested-fields-edit');
   // see if there is any data in it
-//  var inputs = edit_popup.find('input[value]')
   var inputs = edit_popup.find('input')
-//  if(inputs.length > 0) {
+  var has_data = 0
+  // See if there is some data there (I am sure this can be improved by someone who knows jQuery / javascript)
+  inputs.each(function(index) {
+      if($(this).val() != "") {
+          has_data = 1;
+          return false;
+      }
+  })
+  if(has_data == 1) {
       // create a new view div
-      var new_view = $('#references-list').append(createDivFromBlueprint(assoc,'view'));
-      // put the data from the view window into the view div
+      $('#'+assoc+'-list').append(createDivFromBlueprint(assoc,'view'));
+      // and select it
+      var new_view = $('#'+assoc+'-list .fields').last()
+      // put the data from the view window into the new view div
       inputs.each(function(index) {
         var field_name = $(this).attr("name").match(/\[(\w+)\]$/)[1];
         new_view.find('input[name$="['+ field_name +']"]').val($(this).val());
         });
       // generate the output for the view div
       showReferencesView();
-//      };
+      };
   // Lose the popup window
   edit_popup.remove();
   return false;

@@ -13,8 +13,10 @@
 }
 
 .detail-display {
-    border : 1px solid gray;
-    float: left;
+border: 1px solid gray;
+float: left;
+width: 300px;
+padding: 2px 6px;
 }
 
 .fields {
