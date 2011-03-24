@@ -1,3 +1,7 @@
+var nested_displays = [];
+
+nested_displays['references'] = showReferencesView;
+
 function getFieldValue(fieldsDiv, fieldName) {
     return fieldsDiv.find('input[name$="['+ fieldName +']"]').attr("value");
 }
@@ -24,5 +28,5 @@ function showReferencesView() {
 }
 
 $(function() {
-    showReferencesView();
+    nested_displays['references']();
 });

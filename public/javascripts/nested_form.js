@@ -79,7 +79,7 @@ $('form a.stash_nested_fields').live('click', function() {
         new_view.find('input[name$="['+ field_name +']"]').val($(this).val());
         });
       // generate the output for the view div
-      showReferencesView();
+      nested_displays[assoc]();
       };
   // Lose the popup window
   edit_popup.remove();
