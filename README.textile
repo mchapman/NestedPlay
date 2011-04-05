@@ -2,7 +2,7 @@ This project demonstrates the extentions to nest_forms gem at github.com/mchapma
 form to be used for creating a nested record.  A drill down to edit the record could perhaps be implemented.
 
 Hand crafted javascript is used to display the nested record in whatever format is required.
-!http://github.com/mchapman/NestedPlay/raw/master/doc/viewing.png!
+!https://github.com/mchapman/NestedPlay/raw/master/doc/viewing.png!
 
 New records are added in a simple 'pop-up' form.
-!http://github.com/mchapman/NestedPlay/raw/master/doc/adding.png!
+!https://github.com/mchapman/NestedPlay/raw/master/doc/adding.png!
