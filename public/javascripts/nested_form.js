@@ -18,7 +18,7 @@ function createDivFromBlueprint(assoc,type) {
           content = content.replace(
             new RegExp('(\\[' + parent_names[i] + '\\])\\[.+?\\]', 'g'),
             '$1[' + parent_ids[i] + ']'
-          )
+          );
         }
       }
     }
@@ -28,7 +28,6 @@ function createDivFromBlueprint(assoc,type) {
     var new_id  = new Date().getTime();
     content     = content.replace(regexp, new_id);
     return content;
-
 }
 
 $(function() {
@@ -36,7 +35,7 @@ $('form a.add_nested_fields').live('click', function() {
 
   // Setup
   var assoc   = $(this).attr('data-association');           // Name of child
-  var edit_div_id = assoc+'-nested-fields-edit'
+  var edit_div_id = assoc+'-nested-fields-edit';
 
   // check we don't already have an edit "window"
   if($('#'+edit_div_id).length == 0) {
@@ -56,34 +55,46 @@ $('form a.remove_nested_fields').live('click', function() {
 
 $('form a.stash_nested_fields').live('click', function() {
   // find the edit "popup" window
-  var assoc   = $(this).attr('data-association');     
+  var assoc   = $(this).attr('data-association');
   var edit_popup = $('#'+assoc+'-nested-fields-edit');
   // see if there is any data in it
-  var inputs = edit_popup.find('input')
-  var has_data = 0
+  var inputs = edit_popup.find('input');
+  var has_data = false;
   // See if there is some data there (I am sure this can be improved by someone who knows jQuery / javascript)
-  inputs.each(function(index) {
+	inputs.each(function(index) {
       if($(this).val() != "") {
-          has_data = 1;
+          has_data = true;
           return false;
       }
-  })
-  if(has_data == 1) {
+  });
+  if(has_data) {
       // create a new view div
       $('#'+assoc+'-list').append(createDivFromBlueprint(assoc,'view'));
       // and select it
-      var new_view = $('#'+assoc+'-list .fields').last()
+      var new_view = $('#'+assoc+'-list .fields').last();
       // put the data from the view window into the new view div
       inputs.each(function(index) {
         var field_name = $(this).attr("name").match(/\[(\w+)\]$/)[1];
         new_view.find('input[name$="['+ field_name +']"]').val($(this).val());
         });
       // generate the output for the view div
-      nested_displays[assoc]();
-      };
+      $('#'+assoc+'-list').trigger('updateDisplay');
+  };
   // Lose the popup window
   edit_popup.remove();
   return false;
   });
 });
+
+$('form a.cancel_nested_fields').live('click', function() {
+  // remove the edit "popup" window
+  var assoc   = $(this).attr('data-association');
+  var edit_popup = $('#'+assoc+'-nested-fields-edit');
+  edit_popup.remove();
+  return false;
+});
+
+function getNestedFormFieldValue(fieldsDiv, fieldName) {
+    return fieldsDiv.find('input[name$="['+ fieldName +']"]').val();
+}
 

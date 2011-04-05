@@ -1,58 +1,129 @@
 <%= nested_form_for @person do |f| %>
-  <% if @person.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@person.errors.count, "error") %> prohibited this country from being saved:</h2>
+    <% if @person.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@person.errors.count, "error") %> prohibited this country from being saved:</h2>
 
-      <ul>
-      <% @person.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+          <ul>
+            <% @person.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :first_name %>    <%= f.text_field :first_name %>
     </div>
-  <% end %>
+    <div class="field">
+      <%= f.label :last_name %>     <%= f.text_field :last_name %>
+    </div>
+    <br/>
+    <div id='references-list' class="ref-section" data-nested-form="true">
+      <div id="emp-ref-header" class="ref-header">
+        <div class="ref-type">References</div>
+        <div class="ref-type-summary">None</div>
+        <div class="ref-type-add">
+          <%= f.link_to_add image_tag('add.png', :alt => 'Add a new reference'), :references %>
+        </div>
+      </div>
+      <%= f.fields_for :references do |ref_form| %>
+          <% if ref_form.object.id %>
+              <%= ref_form.hidden_field :first_name, %>
+              <%= ref_form.hidden_field :last_name %>
+              <%= ref_form.hidden_field :email %>
+              <%= ref_form.hidden_field :date_requested %>
+              <%= ref_form.hidden_field :date_returned %>
+              <%= ref_form.hidden_field :comments %>
+              <div class="detail-display">
+              <div class="content"></div>
+              <div class="remove-btn"><%= ref_form.link_to_remove image_tag('remove.png', :alt => "Delete reference") %></div>
+              </div>
+          <% else %>
+              <div class="detail-popup">
+                <p>
+                  <%= ref_form.label :first_name %>
+                  <%= ref_form.text_field :first_name %>
+                </p>
 
-  <div class="field">
-    <%= f.label :first_name %>    <%= f.text_field :first_name %>
-  </div>
-  <div class="field">
-    <%= f.label :last_name %>     <%= f.text_field :last_name %>
-  </div>
-<br />
-	<div id='references-list'>
-    <%= f.fields_for :references do |ref_form| %>
-        <% if ref_form.object.id %>
-          <div class = "detail-display">This is what we display</div>
-          <%= ref_form.hidden_field :first_name,  %>
-          <%= ref_form.hidden_field :last_name %>
-          <%= ref_form.hidden_field :email %>
-          <%= ref_form.hidden_field :date_requested %>
-          <%= ref_form.hidden_field :date_returned %>
-          <%= ref_form.hidden_field :comments %>
-          <%= ref_form.link_to_remove "Delete" %>
-        <% else %>
-          <div class="detail-popup">
-            <p>
-              <%= ref_form.label :first_name %>
-              <%= ref_form.text_field :first_name %>
-            </p>
-            <p>
-              <%= ref_form.label :last_name %>
-              <%= ref_form.text_field :last_name %>
-            </p>
-            <p>
-              <%= ref_form.label :email %>
-              <%= ref_form.text_field :email %>
-            </p>
-            <%= ref_form.link_to_stash "OK", :references %>
-          </div>
-        <% end %>
-	    <% end %>
-		</div>
-    <br />
-    <%= f.link_to_add "Request a reference", :references %>
-    <br />
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+                <p>
+                  <%= ref_form.label :last_name %>
+                  <%= ref_form.text_field :last_name %>
+                </p>
+
+                <p>
+                  <%= ref_form.label :email %>
+                  <%= ref_form.text_field :email %>
+                </p>
+                <%= ref_form.link_to_cancel "Cancel", :references %>
+                <%= ref_form.link_to_stash "OK", :references %>
+              </div>
+          <% end %>
+      <% end %>
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
 <% end %>
 
+<script type="text/javascript">
+
+    function rcFormatDate(date, format) {
+        d = $.datepicker.parseDate('yy-m-d', date, null)
+        return $.datepicker.formatDate(format, d, null)
+    }
+
+    $(function() {
+        $('#references-list').bind('updateDisplay', function() {
+            var summary_type_count = [0,0,0];
+            var summary = '';
+            var comma = '';
+            $(this).find(".detail-display").each(function (i) {
+                var offset = showEmployerReference(this)
+                summary_type_count[offset] = summary_type_count[offset] + 1;
+            });
+            if (summary_type_count.join() == '0,0,0') {
+                summary = 'None';
+            } else {
+                if (summary_type_count[2] != 0) {
+                    summary = summary_type_count[2] + ' complete';
+                    comma = ', ';
+                }
+                if (summary_type_count[1] != 0) {
+                    summary = summary + comma + summary_type_count[1] + ' awaited';
+                    comma = ', ';
+                }
+                if (summary_type_count[0] != 0) {
+                    summary = summary + comma + summary_type_count[0] + ' pending';
+                }
+            }
+            $('#references-list .ref-type-summary').text(summary);
+        })
+        $('div[data-nested-form]').trigger('updateDisplay');
+    });
+
+    function showEmployerReference(item) {
+        var personName = $('input[name="person[first_name]"]').val();
+        var fields = $(item).parent();
+        if ($(item).find('.content').length==0) {
+            $(item).prepend('<div class="content"></div>');
+        }
+        var out;
+        var result;
+        var when_completed = getNestedFormFieldValue(fields, 'date_returned');
+        var email_sent = getNestedFormFieldValue(fields, 'date_requested');
+        if (email_sent.length == 0) {
+            out = '<div class="ref-awaited">A reference from ' + getNestedFormFieldValue(fields, 'first_name') + ' ' + getNestedFormFieldValue(fields, 'last_name') + ' will be requested when the profile is updated.</div>';
+            result = 0;
+        } else if (when_completed.length == 0) {
+            out = '<div class="ref-awaited">A reference from ' + getNestedFormFieldValue(fields, 'first_name') + ' ' + getNestedFormFieldValue(fields, 'last_name') + ' was requested ' + rcFormatDate(email_sent, 'dd MM yy') + ' but has not yet been received.</div>';
+            result = 1;
+        } else {
+            out = '<div class="ref-summary">' + getNestedFormFieldValue(fields, 'first_name') + ' ' + getNestedFormFieldValue(fields, 'last_name') + ' gave this reference ' + rcFormatDate(when_completed, 'dd MM yy') + '.</div>'
+            out = out + '<div class="ref-comments"><span style="font-size: 130%">&#8220;</span>' + getNestedFormFieldValue(fields, 'comments') + '<span style="font-size: 130%">&#8221;</span></div>';
+            result = 2;
+        }
+        $(item).find('.content').html(out);
+        return result;
+    }
+
+</script>
