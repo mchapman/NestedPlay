@@ -109,17 +109,17 @@
         }
         var out;
         var result;
-        var when_completed = getNestedFormFieldValue(fields, 'date_returned');
-        var email_sent = getNestedFormFieldValue(fields, 'date_requested');
+        var when_completed = NestedForm.value(fields, 'date_returned');
+        var email_sent = NestedForm.value(fields, 'date_requested');
         if (email_sent.length == 0) {
-            out = '<div class="ref-awaited">A reference from ' + getNestedFormFieldValue(fields, 'first_name') + ' ' + getNestedFormFieldValue(fields, 'last_name') + ' will be requested when the profile is updated.</div>';
+            out = '<div class="ref-awaited">A reference from ' + NestedForm.value(fields, 'first_name') + ' ' + NestedForm.value(fields, 'last_name') + ' will be requested when the profile is updated.</div>';
             result = 0;
         } else if (when_completed.length == 0) {
-            out = '<div class="ref-awaited">A reference from ' + getNestedFormFieldValue(fields, 'first_name') + ' ' + getNestedFormFieldValue(fields, 'last_name') + ' was requested ' + rcFormatDate(email_sent, 'dd MM yy') + ' but has not yet been received.</div>';
+            out = '<div class="ref-awaited">A reference from ' + NestedForm.value(fields, 'first_name') + ' ' + NestedForm.value(fields, 'last_name') + ' was requested ' + rcFormatDate(email_sent, 'dd MM yy') + ' but has not yet been received.</div>';
             result = 1;
         } else {
-            out = '<div class="ref-summary">' + getNestedFormFieldValue(fields, 'first_name') + ' ' + getNestedFormFieldValue(fields, 'last_name') + ' gave this reference ' + rcFormatDate(when_completed, 'dd MM yy') + '.</div>'
-            out = out + '<div class="ref-comments"><span style="font-size: 130%">&#8220;</span>' + getNestedFormFieldValue(fields, 'comments') + '<span style="font-size: 130%">&#8221;</span></div>';
+            out = '<div class="ref-summary">' + NestedForm.value(fields, 'first_name') + ' ' + NestedForm.value(fields, 'last_name') + ' gave this reference ' + rcFormatDate(when_completed, 'dd MM yy') + '.</div>'
+            out = out + '<div class="ref-comments"><span style="font-size: 130%">&#8220;</span>' + NestedForm.value(fields, 'comments') + '<span style="font-size: 130%">&#8221;</span></div>';
             result = 2;
         }
         $(item).find('.content').html(out);
