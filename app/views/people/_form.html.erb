@@ -36,7 +36,7 @@
               <%= ref_form.hidden_field :comments %>
               <div class="detail-display">
               <div class="content"></div>
-              <div class="remove-btn"><%= ref_form.link_to_remove image_tag('remove.png', :alt => "Delete reference") %></div>
+              <div class="remove-btn"><%= ref_form.link_to_remove image_tag('remove.png', :alt => "Delete reference"), :references %></div>
               </div>
           <% else %>
               <div class="detail-popup">
@@ -104,25 +104,27 @@
     function showEmployerReference(item) {
         var personName = $('input[name="person[first_name]"]').val();
         var fields = $(item).parent();
-        if ($(item).find('.content').length==0) {
-            $(item).prepend('<div class="content"></div>');
+        if (fields.attr('style') !== "display: none; ") {
+            if ($(item).find('.content').length==0) {
+                $(item).prepend('<div class="content"></div>');
+            }
+            var out;
+            var result;
+            var when_completed = NestedForm.value(fields, 'date_returned');
+            var email_sent = NestedForm.value(fields, 'date_requested');
+            if (email_sent.length == 0) {
+                out = '<div class="ref-awaited">A reference from ' + NestedForm.value(fields, 'first_name') + ' ' + NestedForm.value(fields, 'last_name') + ' will be requested when the profile is updated.</div>';
+                result = 0;
+            } else if (when_completed.length == 0) {
+                out = '<div class="ref-awaited">A reference from ' + NestedForm.value(fields, 'first_name') + ' ' + NestedForm.value(fields, 'last_name') + ' was requested ' + rcFormatDate(email_sent, 'dd MM yy') + ' but has not yet been received.</div>';
+                result = 1;
+            } else {
+                out = '<div class="ref-summary">' + NestedForm.value(fields, 'first_name') + ' ' + NestedForm.value(fields, 'last_name') + ' gave this reference ' + rcFormatDate(when_completed, 'dd MM yy') + '.</div>'
+                out = out + '<div class="ref-comments"><span style="font-size: 130%">&#8220;</span>' + NestedForm.value(fields, 'comments') + '<span style="font-size: 130%">&#8221;</span></div>';
+                result = 2;
+            }
+            $(item).find('.content').html(out);
         }
-        var out;
-        var result;
-        var when_completed = NestedForm.value(fields, 'date_returned');
-        var email_sent = NestedForm.value(fields, 'date_requested');
-        if (email_sent.length == 0) {
-            out = '<div class="ref-awaited">A reference from ' + NestedForm.value(fields, 'first_name') + ' ' + NestedForm.value(fields, 'last_name') + ' will be requested when the profile is updated.</div>';
-            result = 0;
-        } else if (when_completed.length == 0) {
-            out = '<div class="ref-awaited">A reference from ' + NestedForm.value(fields, 'first_name') + ' ' + NestedForm.value(fields, 'last_name') + ' was requested ' + rcFormatDate(email_sent, 'dd MM yy') + ' but has not yet been received.</div>';
-            result = 1;
-        } else {
-            out = '<div class="ref-summary">' + NestedForm.value(fields, 'first_name') + ' ' + NestedForm.value(fields, 'last_name') + ' gave this reference ' + rcFormatDate(when_completed, 'dd MM yy') + '.</div>'
-            out = out + '<div class="ref-comments"><span style="font-size: 130%">&#8220;</span>' + NestedForm.value(fields, 'comments') + '<span style="font-size: 130%">&#8221;</span></div>';
-            result = 2;
-        }
-        $(item).find('.content').html(out);
         return result;
     }
 

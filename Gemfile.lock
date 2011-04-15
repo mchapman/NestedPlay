@@ -1,6 +1,5 @@
-GIT
-  remote: git://github.com/mchapman/nested_form
-  revision: e2d4b07c5b559ac14733f123ae6abf0a9e44c8c5
+PATH
+  remote: ~/RubymineProjects/nested_form
   specs:
     nested_form (0.0.0)
 

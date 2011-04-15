@@ -55,7 +55,12 @@ $(function() {
         if (hidden_field) {
             hidden_field.value = '1';
         }
-        $(this).closest('.fields').remove();
+        $(this).closest('.fields').hide();
+
+            // generate the output for the view div
+        var assoc = $(this).attr('data-association');
+        $('#' + assoc + '-list').trigger('updateDisplay');
+
         return false;
     });
 
