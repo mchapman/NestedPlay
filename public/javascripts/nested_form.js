@@ -37,7 +37,7 @@ NestedForm.value = function (fieldsDiv, fieldName) {
 };
 
 $(function() {
-    $('form a.add_nested_fields').live('click', function() {
+    $('form').delegate('a.add_nested_fields', 'click', function() {
 
         // Setup
         var assoc = $(this).attr('data-association');           // Name of child
@@ -50,21 +50,21 @@ $(function() {
         return false;
     });
 
-    $('form a.remove_nested_fields').live('click', function() {
+    $('form').delegate('a.remove_nested_fields', 'click', function() {
         var hidden_field = $(this).prev('input[type=hidden]')[0];
         if (hidden_field) {
             hidden_field.value = '1';
         }
         $(this).closest('.fields').hide();
 
-            // generate the output for the view div
+        // generate the output for the view div
         var assoc = $(this).attr('data-association');
         $('#' + assoc + '-list').trigger('updateDisplay');
 
         return false;
     });
 
-    $('form a.stash_nested_fields').live('click', function() {
+    $('form').delegate('a.stash_nested_fields', 'click', function() {
         // find the edit "popup" window
         var assoc = $(this).attr('data-association');
         var edit_popup = $('#' + assoc + '-nested-fields-edit');
@@ -96,7 +96,7 @@ $(function() {
         return false;
     });
 
-    $('form a.cancel_nested_fields').live('click', function() {
+    $('form').delegate('a.cancel_nested_fields', 'click', function() {
         // remove the edit "popup" window
         var assoc = $(this).attr('data-association');
         var edit_popup = $('#' + assoc + '-nested-fields-edit');
