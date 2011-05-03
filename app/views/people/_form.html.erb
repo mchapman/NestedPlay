@@ -36,6 +36,7 @@
               <%= ref_form.hidden_field :comments %>
               <div class="detail-display">
               <div class="content"></div>
+              <div class="edit-btn"><%= ref_form.link_to_edit image_tag('page_edit.png', :alt => "Edit reference"), :references %></div>
               <div class="remove-btn"><%= ref_form.link_to_remove image_tag('remove.png', :alt => "Delete reference"), :references %></div>
               </div>
           <% else %>
