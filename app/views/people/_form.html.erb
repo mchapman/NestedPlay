@@ -27,7 +27,7 @@
         </div>
       </div>
       <%= f.fields_for :references do |ref_form| %>
-          <% if ref_form.object.id %>
+          <% if (ref_form.object.blueprint == :view) or (!ref_form.object.blueprint and (ref_form.object.id or ref_form.object.new_record?)) %>
               <%= ref_form.hidden_field :first_name, %>
               <%= ref_form.hidden_field :last_name %>
               <%= ref_form.hidden_field :email %>
