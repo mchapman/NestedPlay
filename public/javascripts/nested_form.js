@@ -44,7 +44,7 @@ $(function () {
 
         // check we don't already have an edit "window"
         if ($('#' + edit_div_id).length === 0) {
-            $(this).after('<div id="' + edit_div_id + '">' + NestedForm.createDivFromBlueprint(assoc, 'edit') + '</div>');
+            $(this).parent().after('<div id="' + edit_div_id + '">' + NestedForm.createDivFromBlueprint(assoc, 'edit') + '</div>');
         }
         return false;
     });
@@ -71,7 +71,7 @@ $(function () {
 
         // Show the pop-up (if not already there)
         if (edit_popup.length === 0) {
-            $(this).after('<div id="' + edit_div_id + '">' + NestedForm.createDivFromBlueprint(assoc, 'edit') + '</div>');
+            $(this).parent().after('<div id="' + edit_div_id + '">' + NestedForm.createDivFromBlueprint(assoc, 'edit') + '</div>');
             edit_popup = $('#'+edit_div_id);
         }
 
