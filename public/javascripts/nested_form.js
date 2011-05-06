@@ -76,17 +76,25 @@ $(function () {
         }
 
         // Populate the popup
-        // find the edit "popup" window
+        // Record the record id
         var inputs = edit_popup.find('input');
         var fields = $(this).closest('.fields');
+        var rails_id_field = fields.find('input[name$="[id]"]');
+        if (rails_id_field.length !== 0) {
+            edit_popup.data('id_type','exists');
+            edit_popup.data('id', rails_id_field.val());
+        } else {
+            edit_popup.data('id_type','cached');
+            // grab the fields id (2 in the example below)
+            // user[employer_refs_attributes][2][ref_last_name]
+            edit_popup.data('id', fields.find('input').attr("name").match(/\[(\d+)\]\[\w+\]$/)[1]);
+        }
+
         // Copy the data from the hidden fields into it
         inputs.each(function () {
             var field_name = $(this).attr("name").match(/\[(\w+)\]$/)[1];
             $(this).val(fields.find('input[name$="[' + field_name + ']"]').val());
         });
-        // Record the record id
-        edit_popup.data('id', fields.find('input[name$="[id]"]').val());
-
         return false;
     });
 
@@ -95,12 +103,17 @@ $(function () {
         // find the edit "popup" window
         var assoc = $(this).attr('data-association');
         var edit_popup = $('#' + assoc + '-nested-fields-edit');
-        // see if there is any data in it
         var inputs = edit_popup.find('input');
         var fields;
-        var id = edit_popup.data('id');
-        if (id) {
+        var id_type = edit_popup.data('id_type');
+        var flds_id = edit_popup.data('id');
+        if (id_type === 'exists') {
+            // A record exists on the database and we can locate by the id field
             fields = $('#' + assoc + '-list .fields input[name$="[id]"][value="' + id + '"]').parent();
+        } else if (id_type === 'cached') {
+            // A record exists in the browser and we can locate by the second []
+            // Very small chance of a problem here, if a data set or field name clashes with the generated number
+            fields = $('#' + assoc + '-list .fields input[name*="[' + flds_id + ']"]').parent();
         } else {
             // See if there is some data there (I am sure this can be improved by someone who knows jQuery / javascript)
             var has_data = false;
